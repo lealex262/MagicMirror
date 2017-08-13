@@ -53,4 +53,5 @@ def camera_functions():
         cv2.imwrite(imageName, frame)
 
     save_video('test.avi')
+
 camera_functions()
