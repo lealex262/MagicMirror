@@ -1,4 +1,4 @@
-# MagicMirror
+# Magic Mirror
 
 Tasks:
 * Building the mirror frame
