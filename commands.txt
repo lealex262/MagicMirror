@@ -1,0 +1,7 @@
+Camera
+
+Take image - raspistill -o filename.jpg
+
+Take video - raspivid -o filename.h264 -t timeInMS
+
+Play video - omxplayer filename.h264
