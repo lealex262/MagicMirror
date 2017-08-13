@@ -1,57 +1,32 @@
 import numpy as np
 import cv2
+import picamera
+from time import sleep 
 
 def camera_functions():
 
     # find camera or webcam
-    camera_port = 0
-    cap = cv2.VideoCapture(camera_port)
+    camera = picamera.PiCamera()
 
-    def save_video(videoName):
-        # Define the codec and create VideoWriter object
-        fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        out = cv2.VideoWriter(videoName, fourcc, 20.0, (640,480))
+    def save_video(videoName, timelength):
+        # Start Recording
+        camera.start_recording(videoName + ".h264")
+        sleep(timelength)
 
-        while(cap.isOpened()):
-            # Capture frame-by-frame
-            ret, frame = cap.read()
-            if ret:
-                out.write(frame)
-
-                # Display the frame; if color-converted,
-                # replace frame param with the converted frame, e.g. gray
-                cv2.imshow('Video Test', frame)
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
-            else:
-                break
-
-        # When everything done, release the capture
-        cap.release()
-        out.release()
-        cv2.destroyAllWindows()
-
-    def play_grayscale_video():
-        while (True):
-            # Capture frame-by-frame
-            ret, frame = cap.read()
-
-            # Any color conversions you want here
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-            # Display the resulting frame
-            cv2.imshow('frame', gray)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
-        # When everything done, release the capture
-        cap.release()
-        cv2.destroyAllWindows()
+        # Stop Recpording
+        camera.stop_recording()
 
     def take_image(imageName):
-        ret, frame = cap.read()
-        cv2.imwrite(imageName, frame)
-
-    save_video('test.avi')
-
+        camera.resolution = (2592,1944)
+        camera.capture(imageName + ".jpg")
+        print("Picture " + imageName + " taken")
+        
+    def take_grayscale_image(imageName):
+        camera.resolution = (2592,1944)
+        camera.color_effects = (128, 128)
+        camera.capture(imageName + ".jpg")
+        print("Picture " + imageName + " taken")
+ 
+    save_video("test", 5)
+     
 camera_functions()
