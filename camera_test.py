@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import picamera
+from time import sleep 
 
 def camera_functions():
 
@@ -26,4 +27,6 @@ def camera_functions():
         camera.capture(imageName + ".jpg")
         print("Picture " + imageName + " taken")
  
+    save_video("test", 5)
+     
 camera_functions()
