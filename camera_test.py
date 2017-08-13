@@ -4,7 +4,8 @@ import cv2
 def camera_functions():
 
     # find camera or webcam
-    cap = cv2.VideoCapture(0)
+    camera_port = 0
+    cap = cv2.VideoCapture(camera_port)
 
     def save_video(videoName):
         # Define the codec and create VideoWriter object
@@ -46,6 +47,10 @@ def camera_functions():
         # When everything done, release the capture
         cap.release()
         cv2.destroyAllWindows()
+
+    def take_image(imageName):
+        ret, frame = cap.read()
+        cv2.imwrite(imageName, frame)
 
     save_video('test.avi')
 camera_functions()
