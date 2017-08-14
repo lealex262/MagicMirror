@@ -4,3 +4,7 @@
 # Credential Information
 api_credentials.py
 api_credentials.pyc
+
+# Generated Test Files
+test.jpg
+test.h264
