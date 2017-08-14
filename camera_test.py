@@ -1,9 +1,8 @@
+from datetime import datetime
+from time import mktime, sleep
 import numpy as np
 import cv2
 import picamera
-import time
-import datetime
-from time import sleep
 
 # find camera or webcam
 camera = picamera.PiCamera()
@@ -28,8 +27,7 @@ def take_grayscale_image():
     print("Grayscale picture taken")
 
 def generate_image_name():
-    image_name = str(time.mktime(datetime.datetime.now().timetuple()))
+    image_name = str(mktime(datetime.now().timetuple()))
     return image_name
 
-# save_video("test", 5)
-take_image()
+save_video("test", 5)

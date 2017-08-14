@@ -2,8 +2,8 @@ from imgurpython import ImgurClient
 from api_credentials import IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET
 from apscheduler.schedulers.blocking import BlockingScheduler
 from collections import deque
-import datetime
-import time
+from datetime import datetime
+from time import mktime
 
 client_id = IMGUR_CLIENT_ID
 client_secret = IMGUR_CLIENT_SECRET
@@ -40,7 +40,7 @@ def delete_image(deletehash):
 Checks to see if the first element in the queue is past its delete time
 """
 def check_queue():
-    current_unix_timestamp = time.mktime(datetime.datetime.now().timetuple())
+    current_unix_timestamp = mktime(datetime.now().timetuple())
     while len(delete_hashes) != 0 and delete_hashes[0][0] < current_unix_timestamp:
         delete_hash = delete_hashes.popleft()
         delete_image(delete_hash[1])
