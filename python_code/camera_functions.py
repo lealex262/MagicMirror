@@ -1,7 +1,5 @@
 from datetime import datetime
 from time import mktime, sleep
-import numpy as np
-# import cv2
 import picamera
 
 # find camera or webcam
@@ -17,13 +15,13 @@ def save_video(videoName, timelength):
 
 def take_image():
     camera.resolution = (2592,1944)
-    camera.capture(generate_image_name() + ".jpg")
+    camera.capture("./images" + generate_image_name() + ".jpg")
     print("Picture taken")
 
 def take_grayscale_image():
     camera.resolution = (2592,1944)
     camera.color_effects = (128, 128)
-    camera.capture(generate_image_name() + ".jpg")
+    camera.capture("./images" + generate_image_name() + ".jpg")
     print("Grayscale picture taken")
 
 def generate_image_name():
