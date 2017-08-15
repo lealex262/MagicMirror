@@ -1,7 +1,7 @@
 from datetime import datetime
 from time import mktime, sleep
 import numpy as np
-import cv2
+# import cv2
 import picamera
 
 # find camera or webcam
@@ -30,4 +30,5 @@ def generate_image_name():
     image_name = str(mktime(datetime.now().timetuple()))
     return image_name
 
-save_video("test", 5)
+# save_video("test", 5) 
+take_image() 

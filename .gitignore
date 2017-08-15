@@ -6,5 +6,6 @@ api_credentials.py
 api_credentials.pyc
 
 # Generated Test Files
+*.[jJ][pP][gG]
 test.jpg
 test.h264
