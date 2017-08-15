@@ -33,4 +33,8 @@ def generate_image_name():
     image_name = str(mktime(datetime.now().timetuple()))
     return image_name
 
-take_image() 
+image_hosting.cron_scheduler()
+image_hosting.scheduler.start()
+while True:
+    if raw_input("Press a button to take an image\n"):
+        take_image()

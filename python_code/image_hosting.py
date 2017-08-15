@@ -1,5 +1,5 @@
 from api_credentials import IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET
-from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 from imgurpython import ImgurClient
 from collections import deque
 from datetime import datetime
@@ -10,7 +10,7 @@ client_id = IMGUR_CLIENT_ID
 client_secret = IMGUR_CLIENT_SECRET
 client = ImgurClient(client_id, client_secret)
 
-scheduler = BlockingScheduler()
+scheduler = BackgroundScheduler()
 second_interval = 10
 hour_interval = 1
 
@@ -27,11 +27,9 @@ def cron_scheduler():
 Upload picture from your computer using the image path
 """
 def upload_picture(image_path_extension):
-    print 'hihihi'
     try:
         # Upload the image to imgur
         picture_info = client.upload_from_path(image_path_extension)
-        print picture_info
 
         # Remove the image from the pi to free up space
         remove(image_path_extension)
@@ -44,7 +42,6 @@ def upload_picture(image_path_extension):
         print picture_info[unicode('link', "utf-8")]
     except IOError as e:
         print e
-
 
 """
 Delete an image using an image's delete hash
@@ -61,6 +58,3 @@ def check_queue():
     while len(delete_hashes) != 0 and delete_hashes[0][0] < current_unix_timestamp:
         delete_hash = delete_hashes.popleft()
         delete_image(delete_hash[1])
-
-#cron_scheduler()
-#scheduler.start()
