@@ -4,6 +4,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from collections import deque
 from datetime import datetime
 from time import mktime
+from os import remove
 
 client_id = IMGUR_CLIENT_ID
 client_secret = IMGUR_CLIENT_SECRET
@@ -22,19 +23,31 @@ def cron_scheduler():
 """
 Upload picture from your computer using the image path
 """
-def upload_picture():
-    picture_info = client.upload_from_path("./test.jpg")
-    deletehash = picture_info[unicode('deletehash', "utf-8")]
-    unix_timestamp = picture_info[unicode('datetime', "utf-8")]
-    delete_time = int(unix_timestamp) + seconds_until_deletion
-    delete_hashes.append((delete_time, deletehash))
-    print picture_info[unicode('link', "utf-8")]
+def upload_picture(image_name):
+    try:
+        # Upload the image to imgur
+        image_path_extension = "./" + image_name + ".jpg"
+        picture_info = client.upload_from_path(image_path_extension)
+
+        # Remove the image from the pi to free up space
+        remove(image_path_extension)
+
+        # Delete the image from imgur after a specified amount of time
+        deletehash = picture_info[unicode('deletehash', "utf-8")]
+        unix_timestamp = picture_info[unicode('datetime', "utf-8")]
+        delete_time = int(unix_timestamp) + seconds_until_deletion
+        delete_hashes.append((delete_time, deletehash))
+        print picture_info[unicode('link', "utf-8")]
+    except IOError as e:
+        print e
+
 
 """
 Delete an image using an image's delete hash
 """
 def delete_image(deletehash):
     client.delete_image(deletehash)
+    print 'Image has been deleted!'
 
 """
 Checks to see if the first element in the queue is past its delete time
@@ -45,6 +58,6 @@ def check_queue():
         delete_hash = delete_hashes.popleft()
         delete_image(delete_hash[1])
 
-upload_picture()
+upload_picture('test')
 cron_scheduler()
 scheduler.start()
