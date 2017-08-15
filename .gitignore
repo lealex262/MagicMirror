@@ -2,5 +2,10 @@
 .idea
 
 # Credential Information
-api_credentials.py
-api_credentials.pyc
+python_code/api_credentials.py
+python_code/api_credentials.pyc
+
+# Generated Test Files
+*.[jJ][pP][gG]
+*.[hH]264
+*.[pP][yY][cC]
