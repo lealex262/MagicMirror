@@ -1,4 +1,4 @@
-from python_code.api_credentials import IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET
+from api_credentials import IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET
 from apscheduler.schedulers.blocking import BlockingScheduler
 from imgurpython import ImgurClient
 from collections import deque
@@ -17,17 +17,21 @@ hour_interval = 1
 delete_hashes = deque([])
 seconds_until_deletion = 30
 
+"""
+Periodic scheduler to run the check_queue() method
+"""
 def cron_scheduler():
     scheduler.add_job(check_queue, 'interval', seconds=second_interval)
 
 """
 Upload picture from your computer using the image path
 """
-def upload_picture(image_name):
+def upload_picture(image_path_extension):
+    print 'hihihi'
     try:
         # Upload the image to imgur
-        image_path_extension = "./" + image_name + ".jpg"
         picture_info = client.upload_from_path(image_path_extension)
+        print picture_info
 
         # Remove the image from the pi to free up space
         remove(image_path_extension)
@@ -58,6 +62,5 @@ def check_queue():
         delete_hash = delete_hashes.popleft()
         delete_image(delete_hash[1])
 
-upload_picture('test')
-cron_scheduler()
-scheduler.start()
+#cron_scheduler()
+#scheduler.start()

@@ -1,6 +1,6 @@
 from datetime import datetime
 from time import mktime, sleep
-import python_code.image_hosting as image_hosting
+import image_hosting
 import picamera
 
 # find camera or webcam
@@ -16,17 +16,17 @@ def save_video(videoName, timelength):
 
 def take_image():
     camera.resolution = (2592,1944)
-    image_name = generate_image_name()
-    camera.capture("./images" + image_name + ".jpg")
-    image_hosting.upload_picture(image_name)
+    image_path_extension = "../images/" + generate_image_name() + ".jpg"
+    camera.capture(image_path_extension)
+    image_hosting.upload_picture(image_path_extension)
     print("Picture taken")
 
 def take_grayscale_image():
     camera.resolution = (2592,1944)
     camera.color_effects = (128, 128)
-    image_name = generate_image_name()
-    camera.capture("./images" + image_name + ".jpg")
-    image_hosting.upload_picture(image_name)
+    image_path_extension = "../images/" + generate_image_name() + ".jpg"
+    camera.capture(image_path_extension)
+    image_hosting.upload_picture(image_path_extension)
     print("Grayscale picture taken")
 
 def generate_image_name():
