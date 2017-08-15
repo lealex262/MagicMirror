@@ -1,12 +1,10 @@
+from python_code.api_credentials import IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET
+from apscheduler.schedulers.blocking import BlockingScheduler
+from imgurpython import ImgurClient
 from collections import deque
 from datetime import datetime
 from os import remove
 from time import mktime
-
-from apscheduler.schedulers.blocking import BlockingScheduler
-from imgurpython import ImgurClient
-
-from python_code.api_credentials import IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET
 
 client_id = IMGUR_CLIENT_ID
 client_secret = IMGUR_CLIENT_SECRET
