@@ -1,5 +1,8 @@
 # Magic Mirror
 
+Current Capabilities:
+* None
+
 Tasks:
 * Building the mirror frame
 * Connecting hardware to mirror
