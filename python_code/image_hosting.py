@@ -1,4 +1,4 @@
-from api_credentials import IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, PHONE_NUMBER
+from api_credentials import IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, PHONE_NUMBER, FROM_PHONE_NUMBER
 from apscheduler.schedulers.background import BackgroundScheduler
 from twilio.rest import Client
 from imgurpython import ImgurClient
@@ -39,8 +39,13 @@ def upload_picture(image_path_extension):
         unix_timestamp = picture_info[unicode('datetime', "utf-8")]
         delete_time = int(unix_timestamp) + seconds_until_deletion
         delete_hashes.append((delete_time, deletehash))
-        client.messages.create(
+        
+        print picture_info[unicode('link', "utf-8")]
+        
+        # Send SMS using imgur link
+        twilio_client.messages.create(
             to=PHONE_NUMBER,
+            from_=FROM_PHONE_NUMBER,
             body="Picture taken from Magic Mirror",
             media_url=picture_info[unicode('link', "utf-8")])
     except IOError as e:

@@ -15,7 +15,7 @@ def save_video(videoName, timelength):
 
 def take_image(camera, grayscale=False):
     camera.resolution = (2592,1944)
-    if grayscalee:
+    if grayscale:
         camera.color_effects(128, 128)
     rawCapture = PiRGBArray(camera, size=(2592,1944))
     sleep(0.1)
