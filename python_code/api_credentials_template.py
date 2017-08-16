@@ -9,3 +9,12 @@ for the APIs.
 
 IMGUR_CLIENT_ID = ''
 IMGUR_CLIENT_SECRET = ''
+
+# Twilio API
+
+TWILIO_ACCOUNT_SID = ''
+TWILIO_AUTH_TOKEN = ''
+
+# Phone numbers
+
+PHONE_NUMBER = ''
