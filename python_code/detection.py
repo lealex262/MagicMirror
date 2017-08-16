@@ -1,6 +1,5 @@
 import numpy as np
 import cv2
-from matplotlib import pyplot as plt
 
 cap = cv2.VideoCapture(0)
 
@@ -17,20 +16,46 @@ def background_subtraction():
     cap.release()
     cv2.destroyAllWindows()
 
+# def foreground_detection():
+
+
 def hand_recognition():
     while (1):
         ret, frame = cap.read()
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        blur = cv2.GaussianBlur(gray, (5, 5), 0)
-        # ret, thresh1 = cv2.threshold(blur, 70, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-        ret, thresh1 = cv2.threshold(blur, 70, 255, cv2.THRESH_OTSU)
-        thresh3 = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
 
-        # cv2.imshow('original', frame)
-        cv2.imshow('blur', blur)
-        cv2.imshow('threshold', thresh1)
-        # cv2.imshow('adaptive threshold', thresh3)
+        # Convert to HSV
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
+        # Set Thresholds
+        h_min = 0
+        h_max = 25
+        s_min = 0
+        s_max = 200
+        v_min = 100
+        v_max = 256
+        mask = cv2.inRange(hsv, np.array([h_min, s_min, v_min]), np.array([h_max, s_max, v_max]))
+
+        # Apply Effects
+        kernel = np.ones((6, 6), np.uint8)
+        erosion = cv2.erode(mask, kernel, iterations=1)
+        kernel = np.ones((10, 10), np.uint8)
+        dilation = cv2.dilate(erosion, kernel, iterations=1)
+
+        # Find Coutours
+        ctimg, contours, hierarchy = cv2.findContours(dilation, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        # Draw Coutours
+        cv2.drawContours(frame, contours, -1, (0, 255, 0), 3)
+
+        # Track
+        moments = cv2.moments(contours[0])
+
+        cv2.imshow('frame', frame)
+        cv2.imshow('hsv', hsv)
+        cv2.imshow('mask', mask)
+        cv2.imshow('erosion', erosion)
+        cv2.imshow('dilation', dilation)
+        cv2.imshow('img', ctimg)
         k = cv2.waitKey(30) & 0xff
         if k == 27:
             break
@@ -90,10 +115,39 @@ def skin_extraction():
     cap.release()
     cv2.destroyAllWindows()
 
+
+
 def take_image(imageName):
     ret, frame = cap.read()
     cv2.imwrite(imageName, frame)
 
-# hand_recognition()
+
+def test():
+    while (1):
+        # Take each frame
+        _, frame = cap.read()
+        # Convert BGR to HSV
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        # define range of blue color in HSV
+        lower = np.array([0, 0, 130])
+        upper = np.array([140, 110, 255])
+        # Threshold the HSV image to get only blue colors
+        mask = cv2.inRange(hsv, lower, upper)
+        # Bitwise-AND mask and original image
+        res = cv2.bitwise_and(frame, frame, mask=mask)
+        cv2.imshow('frame', frame)
+        cv2.imshow('mask', mask)
+        cv2.imshow('res', res)
+        k = cv2.waitKey(5) & 0xFF
+        if k == 27:
+            break
+    cv2.destroyAllWindows()
+
+
+# def hsv():
+
+
+hand_recognition()
 # background_subtraction()
-skin_extraction()
+# skin_extraction()
+# test()
