@@ -21,7 +21,7 @@ def detect_fist(event, queue):
         if timer_started:
             end_time = time()
             # if it's been less than 7 seconds and we get 1 count of fist recognition, break
-            if end_time - start_time < 7 and count > 0:
+            if end_time - start_time < 7 and count > 1:
                 camera.close()
                 rawCapture.truncate(0)
                 cv2.destroyAllWindows()
@@ -42,8 +42,8 @@ def detect_fist(event, queue):
                 timer_started = True
                 start_time = time()
             count += 1
-        cv2.imshow("Detection", image)
-        key = cv2.waitKey(1) & 0xFF
+##        cv2.imshow("Detection", image)
+##        key = cv2.waitKey(1) & 0xFF
             
         """
         for (x, y, w, h) in fists:
@@ -55,4 +55,3 @@ def detect_fist(event, queue):
         """
         
         rawCapture.truncate(0)
-    camera.close()
