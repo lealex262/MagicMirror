@@ -1,4 +1,8 @@
 from Tkinter import *
+from time import sleep
+import camera_functions
+import multiprocessing
+import detection
 
 class FullscreenWindow:
 
@@ -13,15 +17,11 @@ class FullscreenWindow:
         self.state = False
         self.tk.bind("<F11>", self.toggle_fullscreen)
         self.tk.bind("<Escape>", self.end_fullscreen)
-
-        # Take picture
-        # Count down
         self.label = Label(self.tk, background="black", foreground="white", text="", width=10)
         self.label.pack()
-        self.countdown(10)
 
     def toggle_fullscreen(self, event=None):
-        self.state = not self.state  # Just toggling the boolean
+        self.state = not self.state
         self.tk.attributes("-fullscreen", self.state)
         return "break"
 
@@ -34,11 +34,27 @@ class FullscreenWindow:
         if remaining is not None:
             self.remaining = remaining
         if self.remaining <= 0:
-            self.label.configure(text="Done")
+            self.label.configure(text="Say cheese!")
+            self.tk.update()
+            camera_functions.take_image(camera)
+            detection.detect_fist()
         else:
             self.label.configure(text="%d" % self.remaining)
-            self.tk.after(1000, self.countdown, self.remaining - 1)
+            self.tk.update()
+            sleep(1)
+            self.countdown(self.remaining - 1)
+
+def mainloop(queue, event):
+    w = FullscreenWindow()
+    while True:
+        event.wait()
+        queue.get()
+        w.countdown(5)
 
 if __name__ == '__main__':
-    w = FullscreenWindow()
-    w.tk.mainloop()
+    queue = multiprocessing.Queue()
+    event = multiprocessing.Event()
+    process = multiprocessing.Process(target=detection.detect_fist, args=(event, queue))
+    process.start()
+    
+    mainloop(queue, event)

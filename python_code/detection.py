@@ -5,7 +5,7 @@ from time import time, sleep
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 
-def detect_fist():
+def detect_fist(event, queue):
     camera = PiCamera()
     camera.resolution = (1296,972)
     camera.framerate = 25
@@ -22,8 +22,10 @@ def detect_fist():
         if timer_started:
             end_time = time()
             # if it's been less than 7 seconds and we get 2 counts of fist recognition, break
-            if end_time - start_time < 7 and count > 1:
-                return initiate_countdown(camera)
+            if end_time - start_time < 7 and count > 0:
+                queue.put("Test")
+                event.set
+                return
             # otherwise if it's been more than 7 seconds, reset the timer and count
             elif end_time - start_time > 7:
                 timer_started = False
@@ -60,5 +62,3 @@ def initiate_countdown(camera):
     print "Say Cheese!"
     camera_functions.take_image(camera)
     detect_fist()
-
-detect_fist()
