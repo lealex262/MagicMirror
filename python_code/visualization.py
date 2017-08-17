@@ -1,4 +1,8 @@
 from Tkinter import *
+from time import sleep
+import camera_functions
+import multiprocessing
+import detection
 
 class FullscreenWindow:
 
@@ -6,22 +10,18 @@ class FullscreenWindow:
         #Settings
         self.tk = Tk()
         self.tk.configure(background='black')
-        self.topFrame = Frame(self.tk, background = 'black')
-        self.bottomFrame = Frame(self.tk, background = 'black')
-        self.topFrame.pack(side = TOP, fill=BOTH, expand = YES)
-        self.bottomFrame.pack(side = BOTTOM, fill=BOTH, expand = YES)
+        self.topFrame = Frame(self.tk, background='black')
+        self.bottomFrame = Frame(self.tk, background='black')
+        self.topFrame.pack(side=TOP, fill=BOTH, expand=YES)
+        self.bottomFrame.pack(side=BOTTOM, fill=BOTH, expand=YES)
         self.state = False
-        self.tk.bind("<Return>", self.toggle_fullscreen)
+        self.tk.bind("<F11>", self.toggle_fullscreen)
         self.tk.bind("<Escape>", self.end_fullscreen)
+        self.label = Label(self.tk, background="black", foreground="white", text="", width=10)
+        self.label.pack()
 
-        # Take picture
-        # # Count down
-        # self.label = Label(self, text="", width=10)
-        # self.label.pack()
-        # self.countdown(10)
-        
     def toggle_fullscreen(self, event=None):
-        self.state = not self.state  # Just toggling the boolean
+        self.state = not self.state
         self.tk.attributes("-fullscreen", self.state)
         return "break"
 
@@ -30,17 +30,35 @@ class FullscreenWindow:
         self.tk.attributes("-fullscreen", False)
         return "break"
 
-    def countdown(self, remaining = None):
+    def countdown(self, event, remaining=None):
+        print remaining
         if remaining is not None:
             self.remaining = remaining
-
         if self.remaining <= 0:
-            self.label.configure(text="Done")
+            self.label.configure(text="Say cheese!")
+            self.tk.update()
+            camera_functions.take_image()
+            event.set()
+            self.label.configure(text="")
+            self.tk.update()
         else:
             self.label.configure(text="%d" % self.remaining)
-            self.remaining = self.remaining - 1
-            self.after(1000, self.countdown)
-    
-if __name__ == '__main__':
+            self.tk.update()
+            sleep(1)
+            self.countdown(event, self.remaining - 1)
+
+def mainloop(queue, event):
     w = FullscreenWindow()
-    w.tk.mainloop()
+    while True:
+        if queue.qsize() > 0:
+            queue.get()
+            w.countdown(event, 5)
+            
+if __name__ == '__main__':
+    camera_functions.scheduler_setup()
+    queue = multiprocessing.Queue()
+    event = multiprocessing.Event()
+    process = multiprocessing.Process(target=detection.detect_fist, args=(event, queue))
+    process.start()
+
+    mainloop(queue, event)

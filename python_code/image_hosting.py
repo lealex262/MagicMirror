@@ -1,14 +1,14 @@
-from api_credentials import IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET
+from api_credentials import IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, PHONE_NUMBER, FROM_PHONE_NUMBER
 from apscheduler.schedulers.background import BackgroundScheduler
+from twilio.rest import Client
 from imgurpython import ImgurClient
 from collections import deque
 from datetime import datetime
 from os import remove
 from time import mktime
 
-client_id = IMGUR_CLIENT_ID
-client_secret = IMGUR_CLIENT_SECRET
-client = ImgurClient(client_id, client_secret)
+imgur_client = ImgurClient(IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET)
+twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 scheduler = BackgroundScheduler()
 second_interval = 10
@@ -29,7 +29,7 @@ Upload picture from your computer using the image path
 def upload_picture(image_path_extension):
     try:
         # Upload the image to imgur
-        picture_info = client.upload_from_path(image_path_extension)
+        picture_info = imgur_client.upload_from_path(image_path_extension)
 
         # Remove the image from the pi to free up space
         remove(image_path_extension)
@@ -39,7 +39,15 @@ def upload_picture(image_path_extension):
         unix_timestamp = picture_info[unicode('datetime', "utf-8")]
         delete_time = int(unix_timestamp) + seconds_until_deletion
         delete_hashes.append((delete_time, deletehash))
+        
         print picture_info[unicode('link', "utf-8")]
+        
+        # Send SMS using imgur link
+        twilio_client.messages.create(
+            to=PHONE_NUMBER,
+            from_=FROM_PHONE_NUMBER,
+            body="Picture taken from Magic Mirror",
+            media_url=picture_info[unicode('link', "utf-8")])
     except IOError as e:
         print e
 
@@ -47,7 +55,7 @@ def upload_picture(image_path_extension):
 Delete an image using an image's delete hash
 """
 def delete_image(deletehash):
-    client.delete_image(deletehash)
+    imgur_client.delete_image(deletehash)
     print 'Image has been deleted!'
 
 """
