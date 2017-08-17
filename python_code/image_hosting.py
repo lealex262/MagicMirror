@@ -43,11 +43,11 @@ def upload_picture(image_path_extension):
         print picture_info[unicode('link', "utf-8")]
         
         # Send SMS using imgur link
-        twilio_client.messages.create(
-            to=PHONE_NUMBER,
-            from_=FROM_PHONE_NUMBER,
-            body="Picture taken from Magic Mirror",
-            media_url=picture_info[unicode('link', "utf-8")])
+##        twilio_client.messages.create(
+##            to=PHONE_NUMBER,
+##            from_=FROM_PHONE_NUMBER,
+##            body="Picture taken from Magic Mirror",
+##            media_url=picture_info[unicode('link', "utf-8")])
     except IOError as e:
         print e
 

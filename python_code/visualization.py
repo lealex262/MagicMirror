@@ -31,13 +31,15 @@ class FullscreenWindow:
         return "break"
 
     def countdown(self, remaining=None):
+        print remaining
         if remaining is not None:
             self.remaining = remaining
         if self.remaining <= 0:
             self.label.configure(text="Say cheese!")
             self.tk.update()
-            camera_functions.take_image(camera)
-            detection.detect_fist()
+            camera_functions.take_image()
+            self.label.configure(text="")
+            self.tk.update()
         else:
             self.label.configure(text="%d" % self.remaining)
             self.tk.update()
@@ -47,14 +49,16 @@ class FullscreenWindow:
 def mainloop(queue, event):
     w = FullscreenWindow()
     while True:
-        event.wait()
-        queue.get()
-        w.countdown(5)
-
+        if queue.qsize() > 0:
+            queue.get()
+            w.countdown(5)
+            event.set()
+            
 if __name__ == '__main__':
+    camera_functions.scheduler_setup()
     queue = multiprocessing.Queue()
     event = multiprocessing.Event()
     process = multiprocessing.Process(target=detection.detect_fist, args=(event, queue))
     process.start()
-    
+
     mainloop(queue, event)

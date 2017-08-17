@@ -13,11 +13,12 @@ def save_video(videoName, timelength):
     # Stop Recording
     camera.stop_recording()
 
-def take_image(camera, grayscale=False):
-    camera.resolution = (2592,1944)
+def take_image(grayscale=False):
+    camera = PiCamera()
+    camera.resolution = (1296,972)
     if grayscale:
         camera.color_effects(128, 128)
-    rawCapture = PiRGBArray(camera, size=(2592,1944))
+    rawCapture = PiRGBArray(camera, size=(1296,972))
     sleep(0.1)
     camera.capture(rawCapture, format="bgr", use_video_port=False)
     image = rawCapture.array
@@ -31,5 +32,6 @@ def generate_image_name():
     image_name = str(mktime(datetime.now().timetuple()))
     return image_name
 
-image_hosting.cron_scheduler()
-image_hosting.scheduler.start()
+def scheduler_setup():
+    image_hosting.cron_scheduler()
+    image_hosting.scheduler.start()
