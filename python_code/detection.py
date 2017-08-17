@@ -23,15 +23,14 @@ def detect_fist(event, queue):
             end_time = time()
             # if it's been less than 7 seconds and we get 2 counts of fist recognition, break
             if end_time - start_time < 7 and count > 0:
+                camera.close()
                 rawCapture.truncate(0)
                 cv2.destroyAllWindows()
-                queue.put("test")
-                camera.close()
+                queue.put("Initiate picture")
+                event.clear()
                 event.wait()
-                break
-##                camera = PiCamera()
-##                camera.resolution = (1296,972)
-##                rawCapture = PiRGBArray(camera, size=(1296,972))
+                print "waiting on event"
+                return detect_fist(event, queue)
             # otherwise if it's been more than 7 seconds, reset the timer and count
             elif end_time - start_time > 7:
                 timer_started = False
@@ -58,14 +57,4 @@ def detect_fist(event, queue):
         """
         
         rawCapture.truncate(0)
-    sleep(3)    
-    detect_fist(event, queue)
-def initiate_countdown(camera):
-    initial_count = 3
-    while initial_count > 0:
-        sleep(1)
-        print initial_count
-        initial_count -= 1    
-    print "Say Cheese!"
-    camera_functions.take_image(camera)
-    detect_fist()
+    camera.close()

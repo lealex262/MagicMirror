@@ -15,10 +15,10 @@ def save_video(videoName, timelength):
 
 def take_image(grayscale=False):
     camera = PiCamera()
-    camera.resolution = (1296,972)
+    camera.resolution = (2592,1944)
     if grayscale:
         camera.color_effects(128, 128)
-    rawCapture = PiRGBArray(camera, size=(1296,972))
+    rawCapture = PiRGBArray(camera, size=(2592,1944))
     sleep(0.1)
     camera.capture(rawCapture, format="bgr", use_video_port=False)
     image = rawCapture.array
@@ -27,6 +27,7 @@ def take_image(grayscale=False):
     image_hosting.upload_picture(image_path_extension)
     print("Picture taken")
     camera.close()
+    sleep(2)
 
 def generate_image_name():
     image_name = str(mktime(datetime.now().timetuple()))

@@ -30,7 +30,7 @@ class FullscreenWindow:
         self.tk.attributes("-fullscreen", False)
         return "break"
 
-    def countdown(self, remaining=None):
+    def countdown(self, event, remaining=None):
         print remaining
         if remaining is not None:
             self.remaining = remaining
@@ -38,21 +38,22 @@ class FullscreenWindow:
             self.label.configure(text="Say cheese!")
             self.tk.update()
             camera_functions.take_image()
+            event.set()
+            print "event set!"
             self.label.configure(text="")
             self.tk.update()
         else:
             self.label.configure(text="%d" % self.remaining)
             self.tk.update()
             sleep(1)
-            self.countdown(self.remaining - 1)
+            self.countdown(event, self.remaining - 1)
 
 def mainloop(queue, event):
     w = FullscreenWindow()
     while True:
         if queue.qsize() > 0:
             queue.get()
-            w.countdown(5)
-            event.set()
+            w.countdown(event, 5)
             
 if __name__ == '__main__':
     camera_functions.scheduler_setup()
