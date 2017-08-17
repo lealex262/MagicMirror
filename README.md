@@ -18,9 +18,7 @@ Possible Tasks:
 * Recognition of more/different gestures
 * SMS for multiple phone numbers instead of a single one
 
-Install required dependencies by installing pip then doing
-*pip install -r requirements.txt --user*
-
-To update package list, pip install your package then
-*pip freeze > requirements.txt* or manually adding to the
-requirements.txt file (recommended)
+Commands:
+* Install required dependencies by installing pip then doing *pip install -r requirements.txt --user*
+* To update package list, pip install your package then *pip freeze > requirements.txt* or manually adding to the requirements.txt file (recommended)
+* TO rotate the raspberry pi screen, do 1) *sudo nano /boot/config.txt* OR *sudo vim /boot/confix.txt* OR just open up that file, 2) add *display_rotate=1* to the last line of that file, and 3) *sudo reboot* 
