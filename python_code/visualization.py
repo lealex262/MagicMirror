@@ -39,7 +39,6 @@ class FullscreenWindow:
             self.tk.update()
             camera_functions.take_image()
             event.set()
-            print "event set!"
             self.label.configure(text="")
             self.tk.update()
         else:

@@ -1,4 +1,3 @@
-import camera_functions
 import numpy as np
 import cv2
 from time import time, sleep
@@ -21,7 +20,7 @@ def detect_fist(event, queue):
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         if timer_started:
             end_time = time()
-            # if it's been less than 7 seconds and we get 2 counts of fist recognition, break
+            # if it's been less than 7 seconds and we get 1 count of fist recognition, break
             if end_time - start_time < 7 and count > 0:
                 camera.close()
                 rawCapture.truncate(0)
@@ -29,7 +28,6 @@ def detect_fist(event, queue):
                 queue.put("Initiate picture")
                 event.clear()
                 event.wait()
-                print "waiting on event"
                 return detect_fist(event, queue)
             # otherwise if it's been more than 7 seconds, reset the timer and count
             elif end_time - start_time > 7:
