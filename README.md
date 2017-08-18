@@ -7,12 +7,9 @@ Current Capabilities:
 * Send media or image link to phone number via SMS
 
 Tasks:
-* Building the mirror frame - DONE
-* Connecting hardware to mirror
-* Create visualization (Black screen, count down) - DONE
-* ~~Add voice commands~~ Gesture recognition - DONE
-* Add functionality to take picture and send to connected iPhone (aka personalization of sorts) - DONE
-* Put more info/visuals on GUI
+* Optimize gesture recognition
+* Improve and add more info/visuals on GUI
+* Improve the mirror display/frame
 
 Possible Tasks:
 * Recognition of more/different gestures
