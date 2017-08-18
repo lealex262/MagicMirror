@@ -6,13 +6,15 @@ from collections import deque
 from datetime import datetime
 from os import remove
 from time import mktime
+from logging import basicConfig
 
 imgur_client = ImgurClient(IMGUR_CLIENT_ID, IMGUR_CLIENT_SECRET)
 twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-scheduler = BackgroundScheduler()
+basicConfig()
 second_interval = 10
 hour_interval = 1
+scheduler = BackgroundScheduler(job_defaults={'misfire_grace_time': second_interval * 0.5})
 
 delete_hashes = deque([])
 seconds_until_deletion = 30

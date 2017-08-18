@@ -15,9 +15,11 @@ class FullscreenWindow:
         self.topFrame.pack(side=TOP, fill=BOTH, expand=YES)
         self.bottomFrame.pack(side=BOTTOM, fill=BOTH, expand=YES)
         self.state = False
+        self.tk.focus_set()
         self.tk.bind("<F11>", self.toggle_fullscreen)
         self.tk.bind("<Escape>", self.end_fullscreen)
-        self.label = Label(self.tk, background="black", foreground="white", text="", width=10)
+        self.toggle_fullscreen(self.state)
+        self.label = Label(self.tk, background="black", foreground="white", text="", width=100, font=("Courier", 75))
         self.label.pack()
 
     def toggle_fullscreen(self, event=None):
@@ -49,6 +51,7 @@ class FullscreenWindow:
 
 def mainloop(queue, event):
     w = FullscreenWindow()
+    w.tk.update()
     while True:
         if queue.qsize() > 0:
             queue.get()
